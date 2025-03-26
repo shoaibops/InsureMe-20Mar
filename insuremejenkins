@@ -36,7 +36,7 @@ pipeline {
       }
     stage('Push the Docker image') {
       steps {
-        sh 'docker push shoaibpathan/insureme:latest .'
+        sh 'docker push shoaibpathan/insureme:latest'
                                 }
             }
     stage('Ansbile config and Deployment') {
