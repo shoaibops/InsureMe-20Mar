@@ -6,7 +6,7 @@
   - name: apt updating
     command: sudo apt update
   - name: Install Python and pip
-  apt:
+    apt:
     name: python3-pip
     state: present
   - name: Installing Docker
