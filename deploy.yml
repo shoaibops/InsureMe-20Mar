@@ -13,10 +13,38 @@
         name: python3-pip
         state: present
 
-    - name: Install Docker
+    - name: Install dependencies for Docker
       apt:
-        name: docker.io
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
         state: present
+
+    - name: Add Docker’s official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+        filename: docker
+
+    - name: Update apt cache after adding Docker repo
+      apt:
+        update_cache: yes
+
+    - name: Install Docker Engine
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: latest
 
     - name: Start and enable Docker service
       systemd:
@@ -37,3 +65,4 @@
         restart_policy: always
         ports:
           - "8084:8081"
+
