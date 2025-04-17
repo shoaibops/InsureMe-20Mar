@@ -4,7 +4,7 @@
   connection: ssh
   tasks:
   - name: updating the New Ec2 Machine 
-    command: sudo yum update
+    command: sudo apt update
     
   - name: Start Docker service
     command: sudo systemctl start docker
