@@ -3,17 +3,37 @@
   hosts: all
   become: true
   tasks:
-  - name: apt updating
-    command: sudo apt update
-  - name: Install python and Pip
-    command: sudo apt install -y python3-pip
-  - name: Installing Docker
-    command: sudo apt-get install docker.io -y
-    become: yes
-    become_user: root
-  - name: start docker service using systemctl
-    command: sudo systemctl start docker
-    become: yes
-    become_user: root
-  - name: Deploy the Image from DockerHub and Run as Container
-    command: docker run -itd -p 8084:8081 shoaibpathan/insureme:latest
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Python3 and pip
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull Docker image from DockerHub
+      docker_image:
+        name: shoaibpathan/insureme
+        source: pull
+
+    - name: Run Docker container
+      docker_container:
+        name: insureme_container
+        image: shoaibpathan/insureme:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "8084:8081"
